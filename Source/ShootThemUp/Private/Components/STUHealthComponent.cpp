@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
+DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
 USTUHealthComponent::USTUHealthComponent()
 {
@@ -40,6 +40,9 @@ void USTUHealthComponent::OnTakeAnyDamage(
     }
     else if (AutoHeal)
     {
+        // GetWorld() - return ptr на глоб. объект мира игры. Данная фунция есть у каждого Actor
+        // GetWorld().GetTimeSeconds() - return колв. сек. от старта игры
+
         GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &USTUHealthComponent::HealthUpdate, HealUpdateTime, true, HealDelay);
     }
 }

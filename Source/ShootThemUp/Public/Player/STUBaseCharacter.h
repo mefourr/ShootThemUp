@@ -35,6 +35,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* DeathAnimMontage;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (ClampMin = "0.0", ClampMax = "15.0"))
+    float LifeSpanOnDeath = 5.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
+    FVector2D LandedDamageVelocity = FVector2D(900.0f, 1200.0f);
+
+    UPROPERTY(EditDefaultsOnly, Category = "Damage")
+    FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+
     virtual void BeginPlay() override;
 
 public:
@@ -52,7 +61,6 @@ private:
     bool WantsToRun = false;
     bool IsMovingForward = false;
 
-    // Keys control
     void MoveForward(float Amount);
     void MoveRight(float Amount);
 
@@ -61,4 +69,7 @@ private:
 
     void OnDeath();
     void OnHealthChanged(float Health);
+
+    UFUNCTION()  // обязателен для динамических делигатов
+    void OnGroundLanded(const FHitResult& Hit);
 };

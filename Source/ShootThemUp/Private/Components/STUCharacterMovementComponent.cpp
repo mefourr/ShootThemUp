@@ -9,4 +9,3 @@ float USTUCharacterMovementComponent::GetMaxSpeed() const
     const ASTUBaseCharacter* Player = Cast<ASTUBaseCharacter>(GetPawnOwner());
     return Player && Player->IsRunning() ? MaxSpeed * RunModifier : MaxSpeed;
 }
-    
