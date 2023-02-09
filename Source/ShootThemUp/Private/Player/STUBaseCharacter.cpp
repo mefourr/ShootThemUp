@@ -8,6 +8,7 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
+#include "Weapon/STUBaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -18,6 +19,7 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
 
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     SpringArmComponent->SetupAttachment(GetRootComponent());
+    SpringArmComponent->SocketOffset = FVector(0.0f, 70.0f, 80.0f);
 
     // camera settings
     SpringArmComponent->bUsePawnControlRotation = true;
@@ -29,6 +31,7 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
 
     HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     HealthTextComponent->SetupAttachment(GetRootComponent());
+    HealthTextComponent->SetOwnerNoSee(true);
 }
 
 void ASTUBaseCharacter::BeginPlay()
@@ -45,11 +48,14 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->HealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 
     LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
+
+    SpawnWeapon();
 }
 
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+    UE_LOG(LogTemp, Display, TEXT("Hello Unreal!"));
 }
 
 void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -138,11 +144,25 @@ void ASTUBaseCharacter::OnHealthChanged(float Health)
 void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 {
     const auto FallVelocityZ = -GetVelocity().Z;
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("On landed: %f"), FallVelocityZ), true, FVector2D(2.0f, 2.0f));
+    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("On landed: %f"), FallVelocityZ), true, FVector2D(2.0f, 2.0f));
 
     if (FallVelocityZ < LandedDamageVelocity.X) return;
 
+    // GetMappedRangeValueClamped() возвращает значение из отрезка LandedDamage которое в процентном соотношение совпадает с FallVelocityZ на отрезке LandedDamageVelocity
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Damage: %f"), FinalDamage), true, FVector2D(2.0f, 2.0f));
+    GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("Damage: %f"), FinalDamage), true, FVector2D(2.0f, 2.0f));
     TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+}
+
+void ASTUBaseCharacter::SpawnWeapon()
+{
+    if (!GetWorld()) return;
+
+    const auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+
+    if (Weapon)
+    {
+        FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+        Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket");
+    }
 }
