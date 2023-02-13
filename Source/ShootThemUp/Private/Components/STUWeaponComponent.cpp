@@ -22,17 +22,19 @@ void USTUWeaponComponent::SpawnWeapon()
 {
     if (!GetWorld()) return;
 
+    // GetOwner() - return указатель на владельца компонента.
     ACharacter* Character = Cast<ACharacter>(GetOwner());
-    if(!Character) return;
+    if (!Character) return;
 
-   CurrentWeapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+    CurrentWeapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
     if (!CurrentWeapon) return;
-    
+
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
+    CurrentWeapon->SetOwner(Character);
 }
 
-void USTUWeaponComponent::Fire() 
+void USTUWeaponComponent::Fire()
 {
     if (!CurrentWeapon) return;
 
