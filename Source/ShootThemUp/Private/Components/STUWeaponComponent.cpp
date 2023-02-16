@@ -3,6 +3,7 @@
 #include "Components/STUWeaponComponent.h"
 #include "Weapon/STUBaseWeapon.h"
 #include "GameFramework/Character.h"
+#include "Engine/World.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
@@ -22,13 +23,14 @@ void USTUWeaponComponent::SpawnWeapon()
 {
     if (!GetWorld()) return;
 
-    // GetOwner() - return указатель на владельца компонента.
+    // GetOwner() - return указатель на владельца компонента: ASTUBaseCharacter.
     ACharacter* Character = Cast<ACharacter>(GetOwner());
+
     if (!Character) return;
 
     CurrentWeapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
     if (!CurrentWeapon) return;
-
+    
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
     CurrentWeapon->SetOwner(Character);
