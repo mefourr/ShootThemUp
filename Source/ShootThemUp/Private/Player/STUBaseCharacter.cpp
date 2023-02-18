@@ -8,9 +8,8 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/STUWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
-
-
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -127,8 +126,6 @@ float ASTUBaseCharacter::GetMovementDirection() const
 
 void ASTUBaseCharacter::OnDeath()
 {
-    UE_LOG(LogBaseCharacter, Error, TEXT("Player: %s Is dead "), *GetName());
-
     PlayAnimMontage(DeathAnimMontage);
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(LifeSpanOnDeath);
@@ -137,6 +134,8 @@ void ASTUBaseCharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float Health)

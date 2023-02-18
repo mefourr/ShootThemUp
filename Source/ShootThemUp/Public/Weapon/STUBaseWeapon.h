@@ -7,6 +7,7 @@
 #include "STUBaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class USTUHealthComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
@@ -18,6 +19,7 @@ public:
 
     virtual void Fire();
 
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
@@ -28,10 +30,20 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     float TraceMaxDistace = 1500.0f;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    float DamageAmount = 10.0f;
+    
+
     virtual void BeginPlay() override;
 
     void MakeShot();
 
-public:
+    AController* GetPlayerController() const;
+    bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
+    FTransform GetMuzzleTranform() const;
+    bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
+    void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+    void MakeDamage(const FHitResult HitResult);
 
+private:
 };
