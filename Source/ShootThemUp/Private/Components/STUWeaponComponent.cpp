@@ -30,15 +30,23 @@ void USTUWeaponComponent::SpawnWeapon()
 
     CurrentWeapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
     if (!CurrentWeapon) return;
-    
+
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
     CurrentWeapon->SetOwner(Character);
 }
 
-void USTUWeaponComponent::Fire()
+void USTUWeaponComponent::StartFire()
+{
+
+    if (!CurrentWeapon) return;
+
+    CurrentWeapon->StartFire();
+}
+
+void USTUWeaponComponent::StopFire()
 {
     if (!CurrentWeapon) return;
 
-    CurrentWeapon->Fire();
+    CurrentWeapon->StopFire();
 }

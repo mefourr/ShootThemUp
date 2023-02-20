@@ -2,6 +2,7 @@
 
 #include "Weapon/STUBaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -25,15 +26,24 @@ void ASTUBaseWeapon::BeginPlay()
     check(WeaponMesh);
 }
 
-void ASTUBaseWeapon::Fire()
+void ASTUBaseWeapon::StartFire()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("BANGH!")), true, FVector2D(1.2f, 1.2f));
 
     MakeShot();
+
+    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);
+}
+
+void ASTUBaseWeapon::StopFire()
+{
+    GetWorldTimerManager().ClearTimer(ShotTimerHandle);
 }
 
 void ASTUBaseWeapon::MakeShot()
 {
+
+    UE_LOG(LogBaseWeapon, Warning, TEXT("MAKESHOT: %i"), counter++);
+
     if (!GetWorld()) return;
 
     FVector TraceEnd, TraceStart;
@@ -96,8 +106,11 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
     FRotator ViewRotation;
     if (!GetPlayerViewPoint(ViewLocation, ViewRotation)) return false;
 
-    TraceStart = ViewLocation;                             // SocketTransform.GetLocation();
-    const FVector ShootDirection = ViewRotation.Vector();  // SocketTransform.GetRotation().GetForwardVector();
+    TraceStart = ViewLocation;  // SocketTransform.GetLocation();
+
+    const auto HalfRad = FMath::DegreesToRadians(BuletSpread);
+
+    const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);  // SocketTransform.GetRotation().GetForwardVector();
     TraceEnd = TraceStart + ShootDirection * TraceMaxDistace;
 
     return true;
