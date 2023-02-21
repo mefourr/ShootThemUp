@@ -1,4 +1,4 @@
-// Shoot Them Uo Game. All Right Reserved 
+// Shoot Them Uo Game. All Right Reserved
 
 #pragma once
 
@@ -6,21 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "STUProjectile.generated.h"
 
+class USphereComponent;
+/**
+ *
+ */
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASTUProjectile();
+    GENERATED_BODY()
+
+public:
+    ASTUProjectile();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+    USphereComponent* CollisionComponent;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+    virtual void BeginPlay() override;
 };
