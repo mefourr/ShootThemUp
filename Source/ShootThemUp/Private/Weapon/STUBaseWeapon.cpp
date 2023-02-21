@@ -26,55 +26,11 @@ void ASTUBaseWeapon::BeginPlay()
     check(WeaponMesh);
 }
 
-void ASTUBaseWeapon::StartFire()
-{
+void ASTUBaseWeapon::StartFire() {}
 
-    MakeShot();
+void ASTUBaseWeapon::StopFire() {}
 
-    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);
-}
-
-void ASTUBaseWeapon::StopFire()
-{
-    GetWorldTimerManager().ClearTimer(ShotTimerHandle);
-}
-
-void ASTUBaseWeapon::MakeShot()
-{
-
-    UE_LOG(LogBaseWeapon, Warning, TEXT("MAKESHOT: %i"), counter++);
-
-    if (!GetWorld()) return;
-
-    FVector TraceEnd, TraceStart;
-    if (!GetTraceData(TraceStart, TraceEnd)) return;
-
-    FHitResult HitResult;
-    MakeHit(HitResult, TraceStart, TraceEnd);
-
-    if (HitResult.bBlockingHit)
-    {
-        //назождение направлениея конечной точки трейса
-        const FVector HitForward = (HitResult.ImpactPoint - GetMuzzleTranform().GetLocation()).GetSafeNormal();
-
-        const float Degrees =
-            FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(GetMuzzleTranform().GetRotation().GetForwardVector(), HitForward)));
-        if (Degrees > 90.0f)
-        {
-            DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), TraceEnd, FColor::Green, false, 2.0f, 0, 3.0f);
-            return;
-        }
-
-        MakeDamage(HitResult);
-
-        DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 2.0f, 0, 3.0f);
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 20.0f, 32, FColor::Red, false, 2.0f, 0, 1.0f);
-    }
-    else
-    {
-        DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), TraceEnd, FColor::Green, false, 2.0f, 0, 3.0f);
-    }
-}
+void ASTUBaseWeapon::MakeShot() {}
 
 AController* ASTUBaseWeapon::GetPlayerController() const
 {
@@ -108,9 +64,7 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 
     TraceStart = ViewLocation;  // SocketTransform.GetLocation();
 
-    const auto HalfRad = FMath::DegreesToRadians(BuletSpread);
-
-    const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);  // SocketTransform.GetRotation().GetForwardVector();
+    const FVector ShootDirection = ViewRotation.Vector();  // SocketTransform.GetRotation().GetForwardVector();
     TraceEnd = TraceStart + ShootDirection * TraceMaxDistace;
 
     return true;
@@ -134,4 +88,10 @@ void ASTUBaseWeapon::MakeDamage(const FHitResult HitResult)
     if (!DamageActor) return;
 
     DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
+}
+
+void ASTUBaseWeapon::WeaponRemove()
+{
+
+    SetLifeSpan(5.0f);
 }

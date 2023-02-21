@@ -38,7 +38,6 @@ void USTUWeaponComponent::SpawnWeapon()
 
 void USTUWeaponComponent::StartFire()
 {
-
     if (!CurrentWeapon) return;
 
     CurrentWeapon->StartFire();
@@ -49,4 +48,11 @@ void USTUWeaponComponent::StopFire()
     if (!CurrentWeapon) return;
 
     CurrentWeapon->StopFire();
+}
+
+void USTUWeaponComponent::WeaponRemove()
+{
+    if (!CurrentWeapon) return;
+
+    CurrentWeapon->WeaponRemove();
 }

@@ -19,6 +19,8 @@ public:
     void StartFire();
     void StopFire();
 
+    void WeaponRemove();
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<ASTUBaseWeapon> WeaponClass;
