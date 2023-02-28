@@ -29,9 +29,10 @@ void ASTURifleWeapon::MakeShot()
     if (HitResult.bBlockingHit)
     {
         //назождение направлениея конечной точки трейса
-        const FVector HitForward = (HitResult.ImpactPoint - GetMuzzleTranform().GetLocation()).GetSafeNormal();
+        const FVector HitDirection = (HitResult.ImpactPoint - GetMuzzleTranform().GetLocation()).GetSafeNormal();
 
-        const float Degrees = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(GetMuzzleTranform().GetRotation().GetForwardVector(), HitForward)));
+        const float Degrees = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(GetMuzzleTranform().GetRotation().GetForwardVector(), HitDirection)));
+
         if (Degrees > 90.0f)
         {
             DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), TraceEnd, FColor::Green, false, 2.0f, 0, 3.0f);
@@ -63,4 +64,12 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
     TraceEnd = TraceStart + ShootDirection * TraceMaxDistace;
 
     return true;
+}
+
+void ASTURifleWeapon::MakeDamage(const FHitResult HitResult)
+{
+    const auto DamageActor = HitResult.GetActor();
+    if (!DamageActor) return;
+
+    DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
 }

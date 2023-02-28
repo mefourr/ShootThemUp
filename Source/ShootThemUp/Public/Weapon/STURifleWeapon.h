@@ -6,9 +6,6 @@
 #include "Weapon/STUBaseWeapon.h"
 #include "STURifleWeapon.generated.h"
 
-/**
- *
- */
 UCLASS()
 class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
 {
@@ -19,15 +16,21 @@ public:
     virtual void StopFire() override;
 
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     float TimerBetweenShots = 0.1f;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     float BuletSpread = 1.5f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    float DamageAmount = 10.0f;
 
     virtual void MakeShot() override;
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
 
 private:
     FTimerHandle ShotTimerHandle;
+
+    void MakeDamage(const FHitResult HitResult);
+
 };

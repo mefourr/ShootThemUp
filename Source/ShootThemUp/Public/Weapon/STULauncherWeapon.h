@@ -7,9 +7,7 @@
 #include "STULauncherWeapon.generated.h"
 
 class ASTUProjectile;
-/**
- *
- */
+
 UCLASS()
 class SHOOTTHEMUP_API ASTULauncherWeapon : public ASTUBaseWeapon
 {

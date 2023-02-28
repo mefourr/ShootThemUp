@@ -36,9 +36,8 @@ AController* ASTUBaseWeapon::GetPlayerController() const
 {
     // каст классу ACharacter указателя из фунции GetOwner()
     const auto Player = Cast<ACharacter>(GetOwner());
-    if (!Player) return nullptr;
-
-    return Player->GetController<APlayerController>();
+    
+    return Player ? Player->GetController<APlayerController>() : nullptr;
 }
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
@@ -62,9 +61,9 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
     FRotator ViewRotation;
     if (!GetPlayerViewPoint(ViewLocation, ViewRotation)) return false;
 
-    TraceStart = ViewLocation;  // SocketTransform.GetLocation();
+    TraceStart = ViewLocation;
 
-    const FVector ShootDirection = ViewRotation.Vector();  // SocketTransform.GetRotation().GetForwardVector();
+    const FVector ShootDirection = ViewRotation.Vector();
     TraceEnd = TraceStart + ShootDirection * TraceMaxDistace;
 
     return true;
@@ -80,14 +79,6 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
 
     // фенкция из которой мы получаем данные о пересечении трейса с первым объектом
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
-}
-
-void ASTUBaseWeapon::MakeDamage(const FHitResult HitResult)
-{
-    const auto DamageActor = HitResult.GetActor();
-    if (!DamageActor) return;
-
-    DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
 }
 
 void ASTUBaseWeapon::WeaponRemove()
