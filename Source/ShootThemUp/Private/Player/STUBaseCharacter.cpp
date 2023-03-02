@@ -155,8 +155,7 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 
     if (FallVelocityZ < LandedDamageVelocity.X) return;
 
-    // GetMappedRangeValueClamped() возвращает значение из отрезка LandedDamage которое в процентном соотношение совпадает с FallVelocityZ на отрезке LandedDamageVelocity
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
-   // GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("Damage: %f"), FinalDamage), true, FVector2D(2.0f, 2.0f));
+
     TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
