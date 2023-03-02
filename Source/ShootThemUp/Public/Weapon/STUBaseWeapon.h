@@ -19,8 +19,6 @@ public:
     virtual void StartFire();
     virtual void StopFire();
 
-    void WeaponRemove();
-
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;

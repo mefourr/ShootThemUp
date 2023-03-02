@@ -80,9 +80,3 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
     // фенкция из которой мы получаем данные о пересечении трейса с первым объектом
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
-
-void ASTUBaseWeapon::WeaponRemove()
-{
-
-    SetLifeSpan(5.0f);
-}
