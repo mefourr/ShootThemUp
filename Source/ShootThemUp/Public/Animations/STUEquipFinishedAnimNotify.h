@@ -17,5 +17,4 @@ public:
     virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation);
 
     FOnNotifiedSignature OnNotified;
-
 };

@@ -24,6 +24,8 @@ void ASTUBaseWeapon::BeginPlay()
     Super::BeginPlay();
 
     check(WeaponMesh);
+
+    CurrentAmmo = DefaultAmmo;
 }
 
 void ASTUBaseWeapon::StartFire() {}
@@ -36,7 +38,7 @@ AController* ASTUBaseWeapon::GetPlayerController() const
 {
     // каст классу ACharacter указателя из фунции GetOwner()
     const auto Player = Cast<ACharacter>(GetOwner());
-    
+
     return Player ? Player->GetController<APlayerController>() : nullptr;
 }
 
@@ -79,4 +81,45 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
 
     // фенкция из которой мы получаем данные о пересечении трейса с первым объектом
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+}
+
+void ASTUBaseWeapon::DecreaseAmmo()
+{
+    CurrentAmmo.Bullets--;
+    LogAmmo();
+
+    if (IsClipEmpty() && !IsAmmoEmpty())
+    {
+        ChangeClip();
+    }
+}
+
+bool ASTUBaseWeapon::IsAmmoEmpty() const
+{
+    return !CurrentAmmo.Infinite && CurrentAmmo.Clips == 0 && IsClipEmpty();
+}
+
+bool ASTUBaseWeapon::IsClipEmpty() const
+{
+    return CurrentAmmo.Bullets == 0;
+}
+
+void ASTUBaseWeapon::ChangeClip()
+{
+    CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+
+    if (!CurrentAmmo.Infinite)
+    {
+        CurrentAmmo.Clips--;
+    }
+    UE_LOG(LogBaseWeapon, Display, TEXT("ChangeClip: %i"), CurrentAmmo.Clips);
+}
+
+void ASTUBaseWeapon::LogAmmo()
+{
+    FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
+    AmmoInfo += CurrentAmmo.Infinite ? "Infinite / " : FString::FromInt(CurrentAmmo.Clips) + " / ";
+    AmmoInfo += IsAmmoEmpty() ? "IsAmmoEmpty - true" : "IsAmmoEmpty - false";
+
+    UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }
