@@ -112,14 +112,13 @@ void ASTUBaseWeapon::ChangeClip()
     {
         CurrentAmmo.Clips--;
     }
-    UE_LOG(LogBaseWeapon, Display, TEXT("ChangeClip: %i"), CurrentAmmo.Clips);
 }
 
 void ASTUBaseWeapon::LogAmmo()
 {
     FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
-    AmmoInfo += CurrentAmmo.Infinite ? "Infinite / " : FString::FromInt(CurrentAmmo.Clips) + " / ";
-    AmmoInfo += IsAmmoEmpty() ? "IsAmmoEmpty - true" : "IsAmmoEmpty - false";
+    AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips) + " / ";
+    AmmoInfo += IsAmmoEmpty() ? "IsAmmoEmpty: true" : "IsAmmoEmpty; false";
 
     UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }
