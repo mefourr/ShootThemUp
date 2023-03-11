@@ -51,6 +51,8 @@ void USTUWeaponComponent::SpawnWeapons()
 
         if (!Weapon) continue;
 
+        Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnEmptyClip);
+
         Weapon->SetOwner(Character);
 
         Weapons.Add(Weapon);
@@ -145,8 +147,7 @@ void USTUWeaponComponent::InitAnimations()
     for (auto& OnWeaponData : WeaponData)
     {
         auto ReloadFinishedAnimNotify = FindNotifyByClass<USTUReloadFinishedAnimNotify>(OnWeaponData.ReloadAnimMantage);
-        if (ReloadFinishedAnimNotify) continue;
-
+        if (!ReloadFinishedAnimNotify) continue;
         ReloadFinishedAnimNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
     }
 }
@@ -158,6 +159,7 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
     if (!Character || Character->GetMesh() != MeshComp) return;
 
     EquipAnimInProgress = false;
+    UE_LOG(LogWeaponComponent, Warning, TEXT("EquipAnimInProgress: %d"), EquipAnimInProgress)
 }
 
 void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
@@ -165,8 +167,8 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
     ACharacter* Character = Cast<ACharacter>(GetOwner());
 
     if (!Character || Character->GetMesh() != MeshComp) return;
-
     ReloadAnimInProgress = false;
+    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)
 }
 
 bool USTUWeaponComponent::CanFire()
@@ -181,13 +183,30 @@ bool USTUWeaponComponent::CanEquip()
 
 bool USTUWeaponComponent::CanReload()
 {
-    return CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress;
+    return CurrentWeapon             //
+           && !EquipAnimInProgress   //
+           && !ReloadAnimInProgress  //
+           && CurrentWeapon->CanReload();
 }
 
 void USTUWeaponComponent::Reload()
 {
+    ChangeClip();
+}
+
+void USTUWeaponComponent::OnEmptyClip()
+{
+    ChangeClip();
+}
+
+void USTUWeaponComponent::ChangeClip()
+{
     if (!CanReload()) return;
 
+    CurrentWeapon->StopFire();
+    CurrentWeapon->ChangeClip();
+
     ReloadAnimInProgress = true;
+    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)     
     PlayAnimMontage(CurrentReloadAnimMontage);
 }

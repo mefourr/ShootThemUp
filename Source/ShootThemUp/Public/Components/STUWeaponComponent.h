@@ -73,6 +73,13 @@ private:
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void OnReloadFinished(USkeletalMeshComponent* MeshComp);
 
+    bool CanFire();
+    bool CanEquip();
+    bool CanReload();
+
+    void OnEmptyClip();
+    void ChangeClip();
+
     template <typename T>
     T* FindNotifyByClass(UAnimSequenceBase* Animation)
     {
@@ -91,8 +98,4 @@ private:
         }
         return nullptr;
     }
-
-    bool CanFire();
-    bool CanEquip();
-    bool CanReload();
 };
