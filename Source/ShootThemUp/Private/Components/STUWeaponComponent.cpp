@@ -7,8 +7,11 @@
 #include "Player/STUBaseCharacter.h"
 #include "Animations/STUReloadFinishedAnimNotify.h"
 #include "Animations/STUEquipFinishedAnimNotify.h"
+#include "Animations/AnimUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
+
+constexpr static int32 WeaponNum = 2;
 
 USTUWeaponComponent::USTUWeaponComponent()
 {
@@ -18,6 +21,8 @@ USTUWeaponComponent::USTUWeaponComponent()
 void USTUWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
+
+    checkf(WeaponData.Num() == WeaponNum, TEXT("Our character can hold only [%i] weapon items"), WeaponNum);
 
     InitAnimations();
     SpawnWeapons();
@@ -138,16 +143,25 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
 
 void USTUWeaponComponent::InitAnimations()
 {
-    auto EquipFinishedAnimNotify = FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
+    auto EquipFinishedAnimNotify = AnimUtils::FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
     if (EquipFinishedAnimNotify)
     {
         EquipFinishedAnimNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
     }
+    else
+    {
+        UE_LOG(LogWeaponComponent, Error, TEXT("Equip anim notify is forgeten to set"))
+        checkNoEntry();
+    }
 
     for (auto& OnWeaponData : WeaponData)
     {
-        auto ReloadFinishedAnimNotify = FindNotifyByClass<USTUReloadFinishedAnimNotify>(OnWeaponData.ReloadAnimMantage);
-        if (!ReloadFinishedAnimNotify) continue;
+        auto ReloadFinishedAnimNotify = AnimUtils::FindNotifyByClass<USTUReloadFinishedAnimNotify>(OnWeaponData.ReloadAnimMantage);
+        if (!ReloadFinishedAnimNotify)
+        {
+            UE_LOG(LogWeaponComponent, Error, TEXT("Reload anim notify is forgeten to set"))
+            checkNoEntry();
+        }
         ReloadFinishedAnimNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
     }
 }
@@ -207,6 +221,6 @@ void USTUWeaponComponent::ChangeClip()
     CurrentWeapon->ChangeClip();
 
     ReloadAnimInProgress = true;
-    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)     
+    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)
     PlayAnimMontage(CurrentReloadAnimMontage);
 }
