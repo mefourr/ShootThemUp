@@ -83,7 +83,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
     }
 
     ACharacter* Character = Cast<ACharacter>(GetOwner());
-
+    
     if (!Character) return;
 
     if (CurrentWeapon)
@@ -223,4 +223,9 @@ void USTUWeaponComponent::ChangeClip()
     ReloadAnimInProgress = true;
     UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)
     PlayAnimMontage(CurrentReloadAnimMontage);
+}
+
+bool USTUWeaponComponent::IsFiring() const
+{
+    return CurrentWeapon && CurrentWeapon->IsFiring();
 }

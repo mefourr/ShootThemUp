@@ -9,8 +9,6 @@
 
 class ASTUBaseWeapon;
 
-
-
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
 {
@@ -23,6 +21,8 @@ public:
     void StopFire();
     void NextWeapon();
     void Reload();
+
+    bool IsFiring() const;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
@@ -70,6 +70,5 @@ private:
 
     void OnEmptyClip();
     void ChangeClip();
-
 
 };

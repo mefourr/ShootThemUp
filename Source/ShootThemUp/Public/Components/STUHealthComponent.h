@@ -21,6 +21,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Health")
     bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
+    UFUNCTION(BlueprintCallable, Category = "Health")
+    float GetHealthPercent() const { return Health / MaxHealth; }
+
     float GetHealth() const { return Health; }
 
 protected:
@@ -31,7 +34,7 @@ protected:
     bool AutoHeal = true;
 
     UPROPERTY(
-        EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal", ClampMin = "0.1", ClampMax = "1.0"))
+        EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal", ClampMin = "0.0001", ClampMax = "1.0"))
     float HealUpdateTime = 0.3f;
 
     UPROPERTY(

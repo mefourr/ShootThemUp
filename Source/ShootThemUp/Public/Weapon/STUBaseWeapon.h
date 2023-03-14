@@ -25,6 +25,8 @@ public:
     void ChangeClip();
     bool CanReload() const;
 
+    bool IsFiring() const;
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
@@ -53,6 +55,9 @@ protected:
     bool IsClipEmpty() const;
     void LogAmmo();
 
+
 private:
     FAmmoData CurrentAmmo;
+
+    bool FireInProgress = false;
 };

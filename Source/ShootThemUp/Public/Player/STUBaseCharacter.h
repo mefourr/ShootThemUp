@@ -78,6 +78,7 @@ private:
     UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
 
+    void OnStartFire();
  
 
 };

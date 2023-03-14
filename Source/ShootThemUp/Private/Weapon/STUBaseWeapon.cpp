@@ -30,9 +30,20 @@ void ASTUBaseWeapon::BeginPlay()
     CurrentAmmo = DefaultAmmo;
 }
 
-void ASTUBaseWeapon::StartFire() {}
+void ASTUBaseWeapon::StartFire()
+{
+    FireInProgress = true;
+}
 
-void ASTUBaseWeapon::StopFire() {}
+void ASTUBaseWeapon::StopFire()
+{
+    FireInProgress = false;
+}
+
+bool ASTUBaseWeapon::IsFiring() const
+{
+    return FireInProgress;
+}
 
 void ASTUBaseWeapon::MakeShot() {}
 
