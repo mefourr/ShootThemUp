@@ -39,3 +39,6 @@ struct FWeaponData
 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeathChangedSignature, float);
+
+// widget
+
