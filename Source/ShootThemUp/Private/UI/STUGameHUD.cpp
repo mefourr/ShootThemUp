@@ -22,7 +22,7 @@ void ASTUGameHUD::DrawHUD()
 {
     Super::DrawHUD();
 
-    DrawCrossHair();
+  //  DrawCrossHair();
 }
 
 void ASTUGameHUD::DrawCrossHair()

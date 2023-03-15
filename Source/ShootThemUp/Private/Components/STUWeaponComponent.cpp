@@ -229,3 +229,13 @@ bool USTUWeaponComponent::IsFiring() const
 {
     return CurrentWeapon && CurrentWeapon->IsFiring();
 }
+
+bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+    if (CurrentWeapon)
+    {
+        UIData = CurrentWeapon->GetUIData();
+        return true;
+    }
+    return false;
+}

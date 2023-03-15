@@ -35,10 +35,21 @@ struct FWeaponData
     UAnimMontage* ReloadAnimMantage;
 };
 
+// widget
+
+USTRUCT(BlueprintType)
+struct FWeaponUIData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    UTexture2D* MainIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    UTexture2D* CrossHairIcon;
+};
+
 // health
 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeathChangedSignature, float);
-
-// widget
-

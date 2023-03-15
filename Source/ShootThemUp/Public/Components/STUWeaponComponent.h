@@ -24,6 +24,8 @@ public:
 
     bool IsFiring() const;
 
+    bool GetWeaponUIData(FWeaponUIData& UIData) const;
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> WeaponData;
@@ -70,5 +72,4 @@ private:
 
     void OnEmptyClip();
     void ChangeClip();
-
 };

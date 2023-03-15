@@ -27,6 +27,8 @@ public:
 
     bool IsFiring() const;
 
+    FWeaponUIData GetUIData() const { return UIData; }
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
@@ -39,6 +41,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo{30, 10, false};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FWeaponUIData UIData;
 
     virtual void BeginPlay() override;
     virtual void MakeShot();
@@ -54,7 +59,6 @@ protected:
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
     void LogAmmo();
-
 
 private:
     FAmmoData CurrentAmmo;
