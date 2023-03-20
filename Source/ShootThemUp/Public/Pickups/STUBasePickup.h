@@ -1,4 +1,4 @@
-// Shoot Them Uo Game. All Right Reserved 
+// Shoot Them Uo Game. All Right Reserved
 
 #pragma once
 
@@ -11,19 +11,26 @@ class USphereComponent;
 UCLASS()
 class SHOOTTHEMUP_API ASTUBasePickup : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
+    GENERATED_BODY()
 
-	ASTUBasePickup();
+public:
+    ASTUBasePickup();
 
 protected:
     UPROPERTY(VisibleAnywhere, Category = "Pickup")
     USphereComponent* CollisionComponent;
 
-	virtual void BeginPlay() override;
+    UPROPERTY(VisibleAnywhere, Category = "Pickup")
+    float RespawnTimer = 5.0f;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+    virtual void BeginPlay() override;
+    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+public:
+    virtual bool GivePickupTo(APawn* PlayerPawn);
+    virtual void Tick(float DeltaTime) override;
+
+private:
+    void PickupWasTaken();
+    void Respawn();
 };
