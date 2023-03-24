@@ -26,6 +26,9 @@ public:
 
     float GetHealth() const { return Health; }
 
+    bool TryToAddHealth(float HealthAmount);
+    bool IsHealthFull() const;
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))
     float MaxHealth = 100.0f;
@@ -49,6 +52,7 @@ protected:
 
 private:
     float Health = 0.0f;
+
     FTimerHandle HealTimerHandle;
 
     UFUNCTION()

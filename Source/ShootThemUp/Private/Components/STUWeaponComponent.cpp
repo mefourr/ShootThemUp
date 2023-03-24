@@ -56,8 +56,8 @@ void USTUWeaponComponent::SpawnWeapons()
 
         if (!Weapon) continue;
 
-        Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnEmptyClip);
-
+        Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnClipEmpty);
+        
         Weapon->SetOwner(Character);
 
         Weapons.Add(Weapon);
@@ -173,7 +173,6 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
     if (!Character || Character->GetMesh() != MeshComp) return;
 
     EquipAnimInProgress = false;
-    UE_LOG(LogWeaponComponent, Warning, TEXT("EquipAnimInProgress: %d"), EquipAnimInProgress)
 }
 
 void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
@@ -182,7 +181,6 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 
     if (!Character || Character->GetMesh() != MeshComp) return;
     ReloadAnimInProgress = false;
-    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)
 }
 
 bool USTUWeaponComponent::CanFire()
@@ -208,9 +206,24 @@ void USTUWeaponComponent::Reload()
     ChangeClip();
 }
 
-void USTUWeaponComponent::OnEmptyClip()
+void USTUWeaponComponent::OnClipEmpty(ASTUBaseWeapon* AmmoEmptyWeapon)
 {
-    ChangeClip();
+    if (!AmmoEmptyWeapon) return;
+
+    if (CurrentWeapon == AmmoEmptyWeapon)
+    {
+        ChangeClip();
+    }
+    else
+    {
+        for (auto& Weapon : Weapons)
+        {
+            if (Weapon == AmmoEmptyWeapon)
+            {
+                Weapon->ChangeClip();
+            }
+        }
+    }
 }
 
 void USTUWeaponComponent::ChangeClip()
@@ -221,7 +234,6 @@ void USTUWeaponComponent::ChangeClip()
     CurrentWeapon->ChangeClip();
 
     ReloadAnimInProgress = true;
-    UE_LOG(LogWeaponComponent, Warning, TEXT("ReloadAnimInProgress: %d"), ReloadAnimInProgress)
     PlayAnimMontage(CurrentReloadAnimMontage);
 }
 
@@ -246,6 +258,18 @@ bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
     {
         AmmoData = CurrentWeapon->GetAmmoData();
         return true;
+    }
+    return false;
+}
+
+bool USTUWeaponComponent::TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount)
+{
+    for (const auto& Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponType))
+        {
+            return Weapon->TryToAddAmmo(ClipsAmount);
+        }
     }
     return false;
 }

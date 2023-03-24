@@ -142,6 +142,8 @@ void ASTUBaseCharacter::OnDeath()
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(LifeSpanOnDeath);
 
+    HealthTextComponent->DestroyComponent();
+
     WeaponComponent->StopFire();
 
     if (Controller)

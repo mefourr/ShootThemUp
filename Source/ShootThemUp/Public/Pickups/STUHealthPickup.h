@@ -1,4 +1,4 @@
-// Shoot Them Uo Game. All Right Reserved 
+// Shoot Them Uo Game. All Right Reserved
 
 #pragma once
 
@@ -7,12 +7,17 @@
 #include "STUHealthPickup.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOTTHEMUP_API ASTUHealthPickup : public ASTUBasePickup
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup", meta = (ClampMin = "1.0", ClampMax = "100.0"))
+    float HealthAmount = 100.0f;
+
 public:
     virtual bool GivePickupTo(APawn* PlayerPawn) override;
 };
