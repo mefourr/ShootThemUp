@@ -75,5 +75,5 @@ bool USTUHealthComponent::TryToAddHealth(float HealthAmount)
 
 bool USTUHealthComponent::IsHealthFull() const
 {
-    FMath::IsNearlyEqual(Health, MaxHealth);
+    return FMath::IsNearlyEqual(Health, MaxHealth);
 }
