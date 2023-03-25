@@ -2,6 +2,8 @@
 
 #include "Pickups/STUBasePickup.h"
 #include "Components/SphereComponent.h"
+#include "Engine/Engine.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaswPickup, All, All)
 
@@ -30,6 +32,8 @@ void ASTUBasePickup::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     AddActorLocalRotation(FRotator(0.0f, RotationYaw, 0.0f));
+
+    //GEngine->AddOnScreenDebugMessage(-1, 1, FColor::White, FString::Printf(TEXT("RotationYaw: %f"), RotationYaw));
 }
 
 void ASTUBasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
