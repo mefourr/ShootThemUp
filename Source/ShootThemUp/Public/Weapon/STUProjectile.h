@@ -8,6 +8,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class USTUWeaponFXComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -39,13 +40,17 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     float LifeSeconds = 5.0f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
+    USTUWeaponFXComponent* WeaponFXComponent;
+
     virtual void BeginPlay() override;
 
 private:
     FVector ShootDirection;
 
     UFUNCTION()
-    void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+    void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+        const FHitResult& Hit);
 
     AController* GetController() const;
 };
