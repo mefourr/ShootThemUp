@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUCoreTypes.h"
 #include "Components/ActorComponent.h"
 #include "STUWeaponFXComponent.generated.h"
 
 class UNiagaraSystem;
+class UPhysicalMaterial;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUWeaponFXComponent : public UActorComponent
@@ -20,5 +22,8 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
-    UNiagaraSystem* Effect;
+    FImpactData DefaultImapactData;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
+    TMap<UPhysicalMaterial*, FImpactData> ImpactDataMap;
 };
