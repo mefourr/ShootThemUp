@@ -174,6 +174,7 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
 
     TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+    HealthComponent->PlayCameraShake();
 }
 
 void ASTUBaseCharacter::OnStartFire()
