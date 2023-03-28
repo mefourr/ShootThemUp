@@ -51,7 +51,7 @@ struct FWeaponUIData
 // health
 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeathChangedSignature, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHeathChangedSignature, float, float);
 
 // VFX
 

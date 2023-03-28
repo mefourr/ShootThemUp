@@ -65,8 +65,11 @@ void USTUHealthComponent::HealthUpdate()
 
 void USTUHealthComponent::SetHealth(float NewHealth)
 {
-    Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
-    HealthChanged.Broadcast(Health);
+    const auto NextHealth = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
+    const auto HealthDelta = NextHealth - Health;
+
+    Health = NextHealth;
+    HealthChanged.Broadcast(Health, HealthDelta);
 }
 
 void USTUHealthComponent::PlayCameraShake()
