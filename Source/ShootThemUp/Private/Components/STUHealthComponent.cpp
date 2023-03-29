@@ -7,6 +7,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Camera/CameraShakeBase.h"
+#include "Player/STUBaseCharacter.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -30,8 +32,12 @@ void USTUHealthComponent::BeginPlay()
     }
 }
 
-void USTUHealthComponent::OnTakeAnyDamage(
-    AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+void USTUHealthComponent::OnTakeAnyDamage(  //
+    AActor* DamagedActor,                   //
+    float Damage,                           //
+    const class UDamageType* DamageType,    //
+    class AController* InstigatedBy,        //
+    AActor* DamageCauser)
 {
     if (Damage <= 0.0f || IsDead() || !GetWorld()) return;
 
@@ -41,6 +47,7 @@ void USTUHealthComponent::OnTakeAnyDamage(
 
     if (IsDead())
     {
+
         OnDeath.Broadcast();
     }
     else if (AutoHeal)

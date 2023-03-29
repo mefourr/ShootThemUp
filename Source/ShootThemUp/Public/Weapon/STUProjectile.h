@@ -43,6 +43,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
     USTUWeaponFXComponent* WeaponFXComponent;
 
+        UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (ClampMin = "0.0", ClampMax = "15.0"))
+    float LifeSpanOnDestroy = 3.0f;
+
     virtual void BeginPlay() override;
 
 private:

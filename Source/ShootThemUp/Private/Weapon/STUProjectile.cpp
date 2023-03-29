@@ -61,9 +61,9 @@ void ASTUProjectile::OnProjectileHit(
 
     WeaponFXComponent->PlayImpactFX(Hit);
 
-    DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
-
-    Destroy();
+  // DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
+    SetLifeSpan(LifeSpanOnDestroy);
+  // Destroy();
 }
 
 AController* ASTUProjectile::GetController() const

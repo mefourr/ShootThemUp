@@ -4,7 +4,8 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
-
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
@@ -20,8 +21,9 @@ void ASTURifleWeapon::BeginPlay()
 
 void ASTURifleWeapon::StartFire()
 {
-    Super::StartFire();
+    InitMuzzleFX();
 
+    Super::StartFire();
     GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimerBetweenShots, true);
     MakeShot();
 }
@@ -29,8 +31,9 @@ void ASTURifleWeapon::StartFire()
 void ASTURifleWeapon::StopFire()
 {
     GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+    SetMuzzleFXVisibility(false);
 }
-    
+
 void ASTURifleWeapon::MakeShot()
 {
     if (!GetWorld() || IsAmmoEmpty())
@@ -49,32 +52,21 @@ void ASTURifleWeapon::MakeShot()
     FHitResult HitResult;
     MakeHit(HitResult, TraceStart, TraceEnd);
 
+    FVector TraceFXEnd = TraceEnd;
+
     if (HitResult.bBlockingHit)
     {
         //нахождение направлениея конечной точки трейса
         const FVector HitDirection = (HitResult.ImpactPoint - GetMuzzleTranform().GetLocation()).GetSafeNormal();
-
         const float Degrees =
             FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(GetMuzzleTranform().GetRotation().GetForwardVector(), HitDirection)));
+        if (Degrees > 90.0f) return;
 
-        if (Degrees > 90.0f)
-        {
-            DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), TraceEnd, FColor::Green, false, 2.0f, 0, 3.0f);
-            return;
-        }
-
+        TraceFXEnd = HitResult.ImpactPoint;
         MakeDamage(HitResult);
-
         WeaponFXComponent->PlayImpactFX(HitResult);
-
-        //DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 2.0f, 0, 3.0f);
-        //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 20.0f, 32, FColor::Red, false, 2.0f, 0, 1.0f);
     }
-    else
-    {
-        DrawDebugLine(GetWorld(), GetMuzzleTranform().GetLocation(), TraceEnd, FColor::Green, false, 2.0f, 0, 3.0f);
-    }
-
+    SpawnTraceFX(GetMuzzleTranform().GetLocation(), TraceFXEnd);
     DecreaseAmmo();
 }
 
@@ -100,4 +92,31 @@ void ASTURifleWeapon::MakeDamage(const FHitResult HitResult)
     if (!DamageActor) return;
 
     DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
+}
+
+void ASTURifleWeapon::InitMuzzleFX()
+{
+    if (!MuzzleFXComponent)
+    {
+        MuzzleFXComponent = SpawnMuzzleFX();
+    }
+    SetMuzzleFXVisibility(true);
+}
+
+void ASTURifleWeapon::SetMuzzleFXVisibility(bool Visible)
+{
+    if (MuzzleFXComponent)
+    {
+        MuzzleFXComponent->SetPaused(!Visible);
+        MuzzleFXComponent->SetVisibility(Visible, true);
+    }
+}
+
+void ASTURifleWeapon::SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd)
+{
+    const auto TraceFXComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TraceFX, TraceStart);
+    if (TraceFXComponent)
+    {
+        TraceFXComponent->SetNiagaraVariableVec3(TraceDataName, TraceEnd);
+    }
 }
