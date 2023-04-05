@@ -3,12 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
 #include "STUProjectile.generated.h"
 
 class USphereComponent;
+class UPointLightComponent;
 class UProjectileMovementComponent;
 class USTUWeaponFXComponent;
+
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -21,6 +26,16 @@ public:
     void SetShootDirection(const FVector& Direction) { ShootDirection = Direction; };
 
 protected:
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
+    UNiagaraComponent* NiagaraComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
+    UStaticMeshComponent* Sphere;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
+    UPointLightComponent* PointLightComponent;
+
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     USphereComponent* CollisionComponent;
 
@@ -43,17 +58,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
     USTUWeaponFXComponent* WeaponFXComponent;
 
-        UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (ClampMin = "0.0", ClampMax = "15.0"))
-    float LifeSpanOnDestroy = 3.0f;
-
     virtual void BeginPlay() override;
 
 private:
     FVector ShootDirection;
 
     UFUNCTION()
-    void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
-        const FHitResult& Hit);
+    void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
     AController* GetController() const;
+
+    void DestroyRocket();
 };

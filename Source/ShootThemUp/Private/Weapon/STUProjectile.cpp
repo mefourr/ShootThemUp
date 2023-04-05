@@ -2,11 +2,15 @@
 
 #include "Weapon/STUProjectile.h"
 #include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Gameframework/ProjectileMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
+#include "Components/PointLightComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -24,6 +28,15 @@ ASTUProjectile::ASTUProjectile()
     MovementComponent->ProjectileGravityScale = 1.0f;
 
     WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+
+    NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponent");
+    NiagaraComponent->SetupAttachment(CollisionComponent);
+
+    Sphere = CreateDefaultSubobject<UStaticMeshComponent>("Sphere");
+    Sphere->SetupAttachment(CollisionComponent);
+
+    PointLightComponent = CreateDefaultSubobject<UPointLightComponent>("PointLightComponent");
+    PointLightComponent->SetupAttachment(Sphere);
 }
 
 void ASTUProjectile::BeginPlay()
@@ -33,6 +46,7 @@ void ASTUProjectile::BeginPlay()
     check(MovementComponent);
     check(CollisionComponent);
     check(WeaponFXComponent);
+    check(NiagaraComponent);
 
     MovementComponent->Velocity = ShootDirection * MovementComponent->InitialSpeed;
 
@@ -61,9 +75,7 @@ void ASTUProjectile::OnProjectileHit(
 
     WeaponFXComponent->PlayImpactFX(Hit);
 
-  // DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 16, FColor::Red, false, 5.0f);
-    SetLifeSpan(LifeSpanOnDestroy);
-  // Destroy();
+    DestroyRocket();
 }
 
 AController* ASTUProjectile::GetController() const
@@ -71,4 +83,13 @@ AController* ASTUProjectile::GetController() const
     const auto Pawn = Cast<APawn>(GetOwner());
 
     return Pawn ? Pawn->GetController() : nullptr;
+}
+
+void ASTUProjectile::DestroyRocket()
+{
+    Sphere->DestroyComponent();
+    PointLightComponent->DestroyComponent();
+    CollisionComponent->DestroyComponent();
+
+    NiagaraComponent->GetSystemInstance()->Deactivate(false);
 }
