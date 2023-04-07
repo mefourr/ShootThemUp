@@ -23,8 +23,12 @@ protected:
     UPROPERTY(VisibleAnywhere, Category = "Pickup")
     float RespawnTimer = 5.0f;
 
+    UPROPERTY()
+    TArray<APawn*> OverlappingPawns;
+
     virtual void BeginPlay() override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+    virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 public:
     virtual void Tick(float DeltaTime) override;
