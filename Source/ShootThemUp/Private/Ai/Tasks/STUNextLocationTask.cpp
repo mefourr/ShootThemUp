@@ -23,7 +23,17 @@ EBTNodeResult::Type USTUNextLocationTask::ExecuteTask(UBehaviorTreeComponent& Ow
     if (!NavSys) return EBTNodeResult::Failed;
 
     FNavLocation NavLocation;
-    const auto Foudn = NavSys->GetRandomReachablePointInRadius(Pawn->GetActorLocation(), Radius, NavLocation);
+    auto Location = Pawn->GetActorLocation();
+
+    if (!SelfCenter)
+    {
+        auto CentrActor = Cast<AActor>(Blackboard->GetValueAsObject(CentrActorKey.SelectedKeyName));
+        if (!CentrActor) return EBTNodeResult::Failed;
+        UE_LOG(LogTemp, Warning, TEXT("%s"), *CentrActor->GetName());
+        Location = CentrActor->GetActorLocation();
+    }
+
+    const auto Foudn = NavSys->GetRandomReachablePointInRadius(Location, Radius, NavLocation);
     if (!Foudn) return EBTNodeResult::Failed;
 
     Blackboard->SetValueAsVector(AimLocationKey.SelectedKeyName, NavLocation.Location);
