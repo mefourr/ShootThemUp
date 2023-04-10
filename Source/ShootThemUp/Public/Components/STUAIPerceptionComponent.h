@@ -1,4 +1,4 @@
-// Shoot Them Uo Game. All Right Reserved 
+// Shoot Them Uo Game. All Right Reserved
 
 #pragma once
 
@@ -7,11 +7,13 @@
 #include "STUAIPerceptionComponent.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOTTHEMUP_API USTUAIPerceptionComponent : public UAIPerceptionComponent
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    AActor* GetClosestEnemy() const;
 };
