@@ -29,7 +29,7 @@ EBTNodeResult::Type USTUNextLocationTask::ExecuteTask(UBehaviorTreeComponent& Ow
     {
         auto CentrActor = Cast<AActor>(Blackboard->GetValueAsObject(CentrActorKey.SelectedKeyName));
         if (!CentrActor) return EBTNodeResult::Failed;
-        UE_LOG(LogTemp, Warning, TEXT("%s"), *CentrActor->GetName());
+
         Location = CentrActor->GetActorLocation();
     }
 

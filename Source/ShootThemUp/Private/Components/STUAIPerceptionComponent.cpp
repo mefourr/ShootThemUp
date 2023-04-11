@@ -8,11 +8,11 @@
 
 AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 {
-    TArray<AActor*> PercieveActors;
+    TArray<AActor*> PerceiveActors;
 
     // функция заполнит массив если кого-то увидит.
-    GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), PercieveActors);
-    if (PercieveActors.Num() == 0) return nullptr;
+    GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), PerceiveActors);
+    if (PerceiveActors.Num() == 0) return nullptr;
 
     const auto Controller = Cast<AAIController>(GetOwner());
     if (!Controller) return nullptr;
@@ -23,10 +23,10 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
     float BestDistance = MAX_FLT;
     AActor* BestPawn = nullptr;
 
-    for (auto& Actor : PercieveActors)
+    for (const auto& Actor : PerceiveActors)
     {
         const auto HealthComponent = Actor->FindComponentByClass<USTUHealthComponent>();
-        if (HealthComponent || !HealthComponent->IsDead())  // TODO: check if enemies or not
+        if (HealthComponent && !HealthComponent->IsDead())  // TODO: check if enemies or not
         {
             const auto CurrentDistance = (Actor->GetActorLocation() - Pawn->GetActorLocation()).Size();
             if (CurrentDistance < BestDistance)
