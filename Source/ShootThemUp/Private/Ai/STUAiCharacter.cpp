@@ -4,6 +4,7 @@
 #include "Ai/STUAIController.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Components/STUAIWeaponComponent.h"
+#include "BrainComponent.h"
 
 ASTUAiCharacter::ASTUAiCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<USTUAIWeaponComponent>("WeaponComponent"))
@@ -19,3 +20,15 @@ ASTUAiCharacter::ASTUAiCharacter(const FObjectInitializer& ObjInit)
         GetCharacterMovement()->RotationRate = FRotator(0.0f, 200.0f, 0.0f);
     }
 }
+
+void ASTUAiCharacter::OnDeath()
+{
+    Super::OnDeath();
+
+    const auto STUController = Cast<AAIController>(Controller);
+    if (STUController && STUController->BrainComponent)
+    {
+        STUController->BrainComponent->Cleanup();
+    }
+
+};

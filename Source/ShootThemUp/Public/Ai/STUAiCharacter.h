@@ -1,4 +1,4 @@
-// Shoot Them Uo Game. All Right Reserved 
+// Shoot Them Uo Game. All Right Reserved
 
 #pragma once
 
@@ -11,11 +11,14 @@ class UBehaviorTree;
 UCLASS()
 class SHOOTTHEMUP_API ASTUAiCharacter : public ASTUBaseCharacter
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     ASTUAiCharacter(const FObjectInitializer& ObjInit);
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTreeAsset;
+
+protected:
+    virtual void OnDeath() override;
 };
