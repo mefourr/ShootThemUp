@@ -28,7 +28,10 @@ public:
     bool GetAmmoData(FAmmoData& AmmoData) const;
 
     bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount);
+    bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType);
 
+    ASTUBaseWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
+        
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> WeaponData;
