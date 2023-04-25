@@ -70,6 +70,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         }
         else
         {
+            Destroy();
             UE_LOG(LogSTUGameMode, Error, TEXT("========= GAME OVER ========="));
         }
     }
