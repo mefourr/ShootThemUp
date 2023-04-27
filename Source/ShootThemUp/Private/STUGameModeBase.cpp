@@ -48,14 +48,14 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
-void ASTUGameModeBase::StartRound() 
+void ASTUGameModeBase::StartRound()
 {
     RoundCountDown = GameData.RoundsTIme;
-    
+
     GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::GameTimerUpdate, 1.0f, true);
 }
 
-void ASTUGameModeBase::GameTimerUpdate() 
+void ASTUGameModeBase::GameTimerUpdate()
 {
     UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i | Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
 
@@ -66,6 +66,9 @@ void ASTUGameModeBase::GameTimerUpdate()
         if (CurrentRound + 1 <= GameData.RoundsNum)
         {
             ++CurrentRound;
+            ResetPlayers();
+            UE_LOG(LogSTUGameMode, Warning, TEXT("========= NEW ROUND ========="));
+
             StartRound();
         }
         else
@@ -74,3 +77,23 @@ void ASTUGameModeBase::GameTimerUpdate()
         }
     }
 }
+
+void ASTUGameModeBase::ResetPlayers()
+{
+    if (!GetWorld()) return;
+
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        ResetOnePlayer(It->Get());
+    }
+}
+
+void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
+{
+    if (Controller && Controller->GetPawn())
+    {
+        Controller->GetPawn()->Reset();
+    }
+    RestartPlayer(Controller);
+}
+
