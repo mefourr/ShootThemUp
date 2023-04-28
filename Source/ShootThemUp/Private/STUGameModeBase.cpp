@@ -60,7 +60,7 @@ void ASTUGameModeBase::StartRound()
 
 void ASTUGameModeBase::GameTimerUpdate()
 {
-    UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i | Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+  //  UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i | Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
 
     if (--RoundCountDown == 0)
     {
@@ -77,6 +77,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         else
         {
             UE_LOG(LogSTUGameMode, Error, TEXT("========= GAME OVER ========="));
+            LogPlayerInfo();
         }
     }
 }
@@ -104,6 +105,7 @@ void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
 void ASTUGameModeBase::CreateTeamsInfo()
 {
     if (!GetWorld()) return;
+
     int32 TeamID = 1;
 
     for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
@@ -125,6 +127,7 @@ void ASTUGameModeBase::CreateTeamsInfo()
 
 FLinearColor ASTUGameModeBase::DetermineColorByTeamID(int32 TeamID) const
 {
+    // check at array index
     if (TeamID - 1 < GameData.TeamColor.Num())
     {
         return GameData.TeamColor[TeamID - 1];
@@ -143,5 +146,32 @@ void ASTUGameModeBase::SetPlayerColor(AController* Controller)
     if (!PlayerState) return;
 
     Character->SetPlayerColor(PlayerState->GetTeamColor());
+}
 
+void ASTUGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+    const auto KillerState = KillerController ? (ASTUPlayerState*)KillerController->PlayerState : nullptr;
+    const auto VictimState = VictimController ? Cast<ASTUPlayerState>(VictimController->PlayerState) : nullptr;
+
+    if (KillerState && VictimState)
+    {
+        KillerState->AddKill();
+        VictimState->AddDeath();
+    }
+}
+
+void ASTUGameModeBase::LogPlayerInfo()
+{
+    if (!GetWorld()) return;
+
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        const auto Controller = It->Get();
+        if (!Controller) continue;
+
+        const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
+        if (!PlayerState) continue;
+
+        PlayerState->logInfo();
+    }
 }
