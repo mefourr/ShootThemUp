@@ -5,8 +5,8 @@
 #include "Components/STUWeaponComponent.h"
 #include "STUUtils.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogHud, All, All);
 
+DEFINE_LOG_CATEGORY_STATIC(LogHud, All, All);
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {

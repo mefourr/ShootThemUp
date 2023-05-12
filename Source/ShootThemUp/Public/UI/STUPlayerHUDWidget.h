@@ -31,6 +31,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI")
     void OnTakeDamage();
 
+
+
     virtual bool Initialize() override;
 
 private:
