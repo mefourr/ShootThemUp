@@ -20,7 +20,7 @@ void USTURespawnComponent::RespawnTimerUpdate()
 {
     if (--RespawnCountDown == 0)
     {
-        if (!GetWorld()) return;    
+        if (!GetWorld()) return;
         GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
         const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -28,4 +28,9 @@ void USTURespawnComponent::RespawnTimerUpdate()
 
         GameMode->RespawnRequest(Cast<AController>(GetOwner()));
     }
+}
+
+bool USTURespawnComponent::IsRespawnInProgress() const
+{
+    return GetWorld() ? GetWorld()->GetTimerManager().IsTimerActive(RespawnTimerHandle) : false;
 }
