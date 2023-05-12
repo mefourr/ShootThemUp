@@ -5,7 +5,6 @@
 #include "Components/STUWeaponComponent.h"
 #include "STUUtils.h"
 
-
 DEFINE_LOG_CATEGORY_STATIC(LogHud, All, All);
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
@@ -40,10 +39,11 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 
 bool USTUPlayerHUDWidget::Initialize()
 {
-    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
-    if (HealthComponent)
+    if (GetOwningPlayer())
     {
-        HealthComponent->HealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChange);
+        GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
+
+        OnNewPawn(GetOwningPlayerPawn());
     }
 
     return Super::Initialize();
@@ -55,4 +55,16 @@ void USTUPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
     {
         OnTakeDamage();
     }
+}
+
+void USTUPlayerHUDWidget::OnNewPawn(APawn* Pawn)
+{
+    const auto HealthComponent =         STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Pawn);
+        /*Pawn->FindComponentByClass<USTUHealthComponent>();*/
+    if (HealthComponent && !HealthComponent->HealthChanged.IsBoundToObject(this))
+    {
+        HealthComponent->HealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChange);
+    }
+
+
 }
