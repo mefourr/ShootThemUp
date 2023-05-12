@@ -3,12 +3,15 @@
 #include "Ai/STUAIController.h"
 #include "Ai/STUAICharacter.h"
 #include "Components/STUAIPerceptionComponent.h"
+#include "Components/STURespawnComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 ASTUAIController::ASTUAIController()
 {
     STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUAIPerceptionComponent");
     SetPerceptionComponent(*STUAIPerceptionComponent);
+
+    RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
 
     bWantsPlayerState = true;
 }
@@ -30,11 +33,10 @@ void ASTUAIController::Tick(float DeltaTime)
 
     const auto AimActor = GetFocusOnActor();
     SetFocus(AimActor);
-    
 }
 
 AActor* ASTUAIController::GetFocusOnActor() const
 {
-    if (!GetBlackboardComponent()) return nullptr;  
+    if (!GetBlackboardComponent()) return nullptr;
     return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 }
