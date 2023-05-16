@@ -59,7 +59,7 @@ void USTUPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
 
 void USTUPlayerHUDWidget::OnNewPawn(APawn* Pawn)
 {
-    const auto HealthComponent =         STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Pawn);
+    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Pawn);
         /*Pawn->FindComponentByClass<USTUHealthComponent>();*/
     if (HealthComponent && !HealthComponent->HealthChanged.IsBoundToObject(this))
     {

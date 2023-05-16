@@ -31,6 +31,8 @@ void ASTUGameModeBase::StartPlay()
 
     CurrentRound = 1;
     StartRound();
+
+    SetMatchState(ESTUMathcState::InProgress);
 }
 
 void ASTUGameModeBase::SpawnBots()
@@ -65,8 +67,6 @@ void ASTUGameModeBase::StartRound()
 
 void ASTUGameModeBase::GameTimerUpdate()
 {
-    //  UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i | Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
-
     if (--RoundCountDown == 0)
     {
         GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
@@ -210,4 +210,12 @@ void ASTUGameModeBase::GameOver()
             Pawn->DisableInput(nullptr);
         }
     }
+    SetMatchState(ESTUMathcState::GameOver);
+}
+
+void ASTUGameModeBase::SetMatchState(ESTUMathcState State)
+{
+    if (MatchState == State) return;
+    MatchState = State;
+    OnMatchStateChanged.Broadcast(MatchState);
 }
