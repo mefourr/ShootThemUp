@@ -20,6 +20,8 @@ public:
 
     virtual void StartPlay() override;
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+    virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
+    virtual bool ClearPause() override;
 
     void Killed(AController* KillerController, AController* VictimController);
 
@@ -40,7 +42,7 @@ protected:
     FGameData GameData;
 
 private:
-    ESTUMathcState MatchState = ESTUMathcState::WaitingToStart;
+    ESTUMatchState MatchState = ESTUMatchState::WaitingToStart;
 
     int32 CurrentRound = 0;
     int32 RoundCountDown = 0;
@@ -61,5 +63,5 @@ private:
     void StartRespawn(AController* Controller);
     void GameOver();
 
-    void SetMatchState(ESTUMathcState State);
+    void SetMatchState(ESTUMatchState State);
 };

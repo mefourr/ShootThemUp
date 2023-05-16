@@ -112,7 +112,7 @@ struct FGameData
 };
 
 UENUM(BlueprintType)
-enum class ESTUMathcState : uint8
+enum class ESTUMatchState : uint8
 {
     WaitingToStart = 0,
     InProgress,
@@ -120,4 +120,4 @@ enum class ESTUMathcState : uint8
     GameOver
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMathcState);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchState);

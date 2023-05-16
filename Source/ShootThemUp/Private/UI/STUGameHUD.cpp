@@ -11,11 +11,16 @@ void ASTUGameHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
+    GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+    GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
 
-    if (PlayerHUDWidget)
+    for (auto& GameWidgetPair : GameWidgets)
     {
-        PlayerHUDWidget->AddToViewport();
+        const auto GameWidget = GameWidgetPair.Value;
+        if (!GameWidget) continue;
+
+        GameWidget->AddToViewport();
+        GameWidget->SetVisibility(ESlateVisibility::Hidden);
     }
 
     if (GetWorld())
@@ -26,14 +31,13 @@ void ASTUGameHUD::BeginPlay()
             GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::OnMatchStateChanged);
         }
     }
-
 }
 
 void ASTUGameHUD::DrawHUD()
 {
     Super::DrawHUD();
 
-  //  DrawCrossHair();
+    //  DrawCrossHair();
 }
 
 void ASTUGameHUD::DrawCrossHair()
@@ -44,15 +48,25 @@ void ASTUGameHUD::DrawCrossHair()
     const float LineThickness = 2.0f;
     const FLinearColor LineColor = FLinearColor::Green;
 
-   
-
     DrawLine(
         DispalyCenter.Min - HalfLineSize, DispalyCenter.Max, DispalyCenter.Min + HalfLineSize, DispalyCenter.Max, LineColor, LineThickness);
     DrawLine(
         DispalyCenter.Min, DispalyCenter.Max - HalfLineSize, DispalyCenter.Min, DispalyCenter.Max + HalfLineSize, LineColor, LineThickness);
 }
 
-void ASTUGameHUD::OnMatchStateChanged(ESTUMathcState State)
+void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
 {
+    if (CurrentWidget)
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+    if (GameWidgets.Contains(State))
+    {
+        CurrentWidget = GameWidgets[State];
+    }
+    if (CurrentWidget)
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+    }
     UE_LOG(LogSTUGameHUD, Display, TEXT("State has been changed: %s"), *UEnum::GetValueAsString(State));
 }
