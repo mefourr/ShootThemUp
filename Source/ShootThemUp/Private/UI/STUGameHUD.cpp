@@ -13,6 +13,7 @@ void ASTUGameHUD::BeginPlay()
 
     GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
     GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+    GameWidgets.Add(ESTUMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
 
     for (auto& GameWidgetPair : GameWidgets)
     {
@@ -68,5 +69,5 @@ void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
     {
         CurrentWidget->SetVisibility(ESlateVisibility::Visible);
     }
-    UE_LOG(LogSTUGameHUD, Display, TEXT("State has been changed: %s"), *UEnum::GetValueAsString(State));
+  //  UE_LOG(LogSTUGameHUD, Display, TEXT("State has been changed: %s"), *UEnum::GetValueAsString(State));
 }
