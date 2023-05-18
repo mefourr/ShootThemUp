@@ -31,9 +31,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI")
     void OnTakeDamage();
 
-
-
-    virtual bool Initialize() override;
+protected:
+    virtual void NativeOnInitialized() override;
 
 private:
     void OnHealthChange(float Health, float HealthDelta);
