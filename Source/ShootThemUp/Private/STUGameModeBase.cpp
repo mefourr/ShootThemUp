@@ -9,6 +9,8 @@
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
 #include "EngineUtils.h"
+#include "STUGameInstance.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameMode, All, All);
 
@@ -25,6 +27,8 @@ ASTUGameModeBase::ASTUGameModeBase()
 void ASTUGameModeBase::StartPlay()
 {
     Super::StartPlay();
+
+    UE_LOG(LogSTUGameMode, Error, TEXT("%s"), *GetWorld()->GetGameInstance<USTUGameInstance>()->TestString);
 
     SpawnBots();
     CreateTeamsInfo();

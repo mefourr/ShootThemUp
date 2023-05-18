@@ -3,6 +3,7 @@
 #include "Menu/STUMenuPlayerController.h"
 #include "Menu/STUMenuGameModeBase.h"
 #include "Menu/UI/STUMenuHUD.h"
+#include "STUGameInstance.h"
 
 void ASTUMenuPlayerController::BeginPlay()
 {
