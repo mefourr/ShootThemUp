@@ -28,8 +28,6 @@ void ASTUGameModeBase::StartPlay()
 {
     Super::StartPlay();
 
-    UE_LOG(LogSTUGameMode, Error, TEXT("%s"), *GetWorld()->GetGameInstance<USTUGameInstance>()->TestString);
-
     SpawnBots();
     CreateTeamsInfo();
 
