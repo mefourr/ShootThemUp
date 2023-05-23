@@ -3,7 +3,9 @@
 #include "UI/STUPlayerHUDWidget.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/STUWeaponComponent.h"
+#include "Components/ProgressBar.h"
 #include "STUUtils.h"
+#include "Player/STUPlayerState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHud, All, All);
 
@@ -40,6 +42,7 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 void USTUPlayerHUDWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
+
     if (GetOwningPlayer())
     {
         GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
@@ -54,16 +57,49 @@ void USTUPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
     {
         OnTakeDamage();
     }
+    UpdateHealthBar();
 }
 
 void USTUPlayerHUDWidget::OnNewPawn(APawn* Pawn)
 {
     const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Pawn);
-        /*Pawn->FindComponentByClass<USTUHealthComponent>();*/
+
     if (HealthComponent && !HealthComponent->HealthChanged.IsBoundToObject(this))
     {
         HealthComponent->HealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChange);
     }
+    UpdateHealthBar();
+}
 
+int32 USTUPlayerHUDWidget::GetKillsNum() const
+{
+    const auto Controller = GetOwningPlayer();
+    if (!Controller) return 0;
 
+    const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
+    return PlayerState ? PlayerState->GetKillsNum() : 0;
+}
+
+void USTUPlayerHUDWidget::UpdateHealthBar() 
+{
+    if (HealthProgressBar)
+    {
+        HealthProgressBar->SetFillColorAndOpacity(GetHealthPercent() > PercentColorThreshold ? GoodColor : BadColor);
+    }
+}
+
+FString USTUPlayerHUDWidget::FormatBullets(int32 Bullets) const
+{
+    const int32 MaxLen = 3;
+    const TCHAR PriefixSymbol = '0';
+
+    auto BulletStr = FString::FromInt(Bullets);
+    const auto SymbolsNumToAdd = MaxLen - BulletStr.Len();
+
+    if (SymbolsNumToAdd > 0)
+    {
+        BulletStr = FString::ChrN(SymbolsNumToAdd, PriefixSymbol).Append(BulletStr);
+    }
+
+    return BulletStr;
 }
