@@ -25,6 +25,7 @@ void USTUMenuWidget::NativeOnInitialized()
     }
     InitLevelItems();
 }
+
 void USTUMenuWidget::InitLevelItems()
 {
     const auto STUGameInstance = GetSTUGameInstance();
@@ -88,7 +89,6 @@ void USTUMenuWidget::OnQuitGame()
 {
     UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, true);
 }
-
 
 USTUGameInstance* USTUMenuWidget::GetSTUGameInstance() const
 {

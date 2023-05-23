@@ -5,6 +5,8 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTULevelItemWidget, All, All);
+
 void USTULevelItemWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
@@ -17,6 +19,7 @@ void USTULevelItemWidget::NativeOnInitialized()
 
 void USTULevelItemWidget::OnLevelItemClicked()
 {
+
     OnLevelSelected.Broadcast(LevelData);
 }
 

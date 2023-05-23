@@ -7,6 +7,7 @@
 #include "Components/STUWeaponComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/STUCharacterMovementComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
 {
@@ -25,6 +26,14 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit) : Su
     CameraCollisionComponent->SetupAttachment(CameraComponent);
     CameraCollisionComponent->SetSphereRadius(10.0f);
     CameraCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->bUseControllerDesiredRotation = true;
+        GetCharacterMovement()->RotationRate = FRotator(0.0f, 600.0f, 0.0f);
+    }
+
+    bUseControllerRotationYaw = false;
 }
 
 void ASTUPlayerCharacter::BeginPlay()

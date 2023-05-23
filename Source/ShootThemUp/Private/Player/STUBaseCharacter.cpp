@@ -46,6 +46,7 @@ bool ASTUBaseCharacter::IsRunning() const
     // проверка на движениее
     return false;
 }
+
 float ASTUBaseCharacter::GetMovementDirection() const
 {
     if (GetVelocity().IsZero()) return 0.0f;
