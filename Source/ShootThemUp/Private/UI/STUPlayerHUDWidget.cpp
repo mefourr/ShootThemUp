@@ -6,6 +6,7 @@
 #include "Components/ProgressBar.h"
 #include "STUUtils.h"
 #include "Player/STUPlayerState.h"
+//#include "Animation/WidgetAnimation.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHud, All, All);
 
@@ -56,6 +57,11 @@ void USTUPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta)
     if (HealthDelta < 0)
     {
         OnTakeDamage();
+
+        if (!IsAnimationPlaying(DamagetAnimation))
+        {
+            PlayAnimation(DamagetAnimation);
+        }
     }
     UpdateHealthBar();
 }
