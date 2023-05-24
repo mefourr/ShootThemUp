@@ -18,6 +18,10 @@ class SHOOTTHEMUP_API USTUMenuWidget : public USTUBaseWidget
     GENERATED_BODY()
 protected:
     virtual void NativeOnInitialized() override;
+    virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* HideAnimation;
 
     UPROPERTY(meta = (BindWidget))
     UButton* StartGame;
