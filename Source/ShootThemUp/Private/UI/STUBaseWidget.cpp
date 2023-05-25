@@ -4,6 +4,5 @@
 
 void USTUBaseWidget::Show()
 {
-
     PlayAnimation(ShowAnimation);
 }
