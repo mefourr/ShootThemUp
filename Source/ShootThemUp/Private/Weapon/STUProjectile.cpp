@@ -11,6 +11,7 @@
 #include "Components/PointLightComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Components/AudioComponent.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -37,6 +38,8 @@ ASTUProjectile::ASTUProjectile()
 
     PointLightComponent = CreateDefaultSubobject<UPointLightComponent>("PointLightComponent");
     PointLightComponent->SetupAttachment(Sphere);
+
+    AudioComponent = CreateDefaultSubobject<UAudioComponent>("AudioComponent");
 }
 
 void ASTUProjectile::BeginPlay()
@@ -47,6 +50,7 @@ void ASTUProjectile::BeginPlay()
     check(CollisionComponent);
     check(WeaponFXComponent);
     check(NiagaraComponent);
+    check(AudioComponent);
 
     MovementComponent->Velocity = ShootDirection * MovementComponent->InitialSpeed;
 
@@ -90,6 +94,7 @@ void ASTUProjectile::DestroyRocket()
     Sphere->DestroyComponent();
     PointLightComponent->DestroyComponent();
     CollisionComponent->DestroyComponent();
+    AudioComponent->DestroyComponent(); // TODO: redo disappear smoke;
 
     NiagaraComponent->GetSystemInstance()->Deactivate(false);
 }
