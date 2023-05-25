@@ -10,6 +10,8 @@
 #include "GameFramework/Controller.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
@@ -157,7 +159,7 @@ void ASTUBaseWeapon::LogAmmo()
     AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips) + " / ";
     AmmoInfo += IsAmmoEmpty() ? "IsAmmoEmpty: true" : "IsAmmoEmpty; false";
 
- //   UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
+    //   UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }
 
 bool ASTUBaseWeapon::IsAmmoFull() const
@@ -174,7 +176,7 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
     {
         CurrentAmmo.Clips = FMath::Clamp(ClipsAmount + 1, 0, DefaultAmmo.Clips + 1);
         OnClipEmpty.Broadcast(this);
-       // UE_LOG(LogBaseWeapon, Warning, TEXT("Ammo was empty %i"), ClipsAmount);
+        // UE_LOG(LogBaseWeapon, Warning, TEXT("Ammo was empty %i"), ClipsAmount);
     }
     else if (CurrentAmmo.Clips < DefaultAmmo.Clips)
     {
@@ -182,13 +184,13 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
 
         if (CurrentAmmo.Clips - NextCipsAmount >= 0)
         {
-            //UE_LOG(LogBaseWeapon, Warning, TEXT("Clips were added"));
+            // UE_LOG(LogBaseWeapon, Warning, TEXT("Clips were added"));
 
             CurrentAmmo.Clips = NextCipsAmount;
         }
         else
         {
-          //  UE_LOG(LogBaseWeapon, Warning, TEXT("Ammo is full now"));
+            //  UE_LOG(LogBaseWeapon, Warning, TEXT("Ammo is full now"));
 
             CurrentAmmo.Clips = DefaultAmmo.Clips;
             CurrentAmmo.Bullets = DefaultAmmo.Bullets;
@@ -196,7 +198,7 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
     }
     else
     {
-      //  UE_LOG(LogBaseWeapon, Warning, TEXT("Bullets were added"));
+        //  UE_LOG(LogBaseWeapon, Warning, TEXT("Bullets were added"));
         CurrentAmmo.Bullets = DefaultAmmo.Bullets;
     }
     return true;
