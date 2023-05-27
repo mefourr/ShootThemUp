@@ -40,6 +40,7 @@ ASTUProjectile::ASTUProjectile()
     PointLightComponent->SetupAttachment(Sphere);
 
     AudioComponent = CreateDefaultSubobject<UAudioComponent>("AudioComponent");
+    AudioComponent->SetupAttachment(Sphere);
 }
 
 void ASTUProjectile::BeginPlay()
