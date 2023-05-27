@@ -49,6 +49,9 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
             ImpactData.DecalData.FadeOutTime);  //
     }
 
+
     //  Sound
+
+
     UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactData.ImapctSound, Hit.ImpactPoint);
 }
