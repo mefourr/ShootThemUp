@@ -7,8 +7,9 @@
 #include "STUBasePickup.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
-UCLASS()
+    UCLASS()
 class SHOOTTHEMUP_API ASTUBasePickup : public AActor
 {
     GENERATED_BODY()
@@ -25,6 +26,9 @@ protected:
 
     UPROPERTY()
     TArray<APawn*> OverlappingPawns;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* PickupSound;
 
     virtual void BeginPlay() override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
