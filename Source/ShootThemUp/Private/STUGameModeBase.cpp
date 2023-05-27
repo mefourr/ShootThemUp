@@ -77,7 +77,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         {
             ++CurrentRound;
             ResetPlayers();
-            UE_LOG(LogSTUGameMode, Warning, TEXT("========= NEW ROUND ========="));
+           // UE_LOG(LogSTUGameMode, Warning, TEXT("========= NEW ROUND ========="));
 
             StartRound();
         }
