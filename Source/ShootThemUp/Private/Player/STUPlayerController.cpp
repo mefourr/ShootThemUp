@@ -25,8 +25,8 @@ void ASTUPlayerController::BeginPlay()
 
     if (GetWorld())
     {
-        const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
-        if (GameMode)
+
+        if (const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()))
         {
             GameMode->OnMatchStateChanged.AddUObject(this, &ASTUPlayerController::OnMatchStateChanged);
         }
@@ -68,4 +68,4 @@ void ASTUPlayerController::OnMuteSound()
     if (!STUGameInstance) return;
 
     STUGameInstance->ToggleVolume();
-}   
+}

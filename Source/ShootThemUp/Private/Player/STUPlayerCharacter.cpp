@@ -120,7 +120,7 @@ void ASTUPlayerCharacter::OnDeath()
 
 void ASTUPlayerCharacter::OnStartFire()
 {
-    if (IsRunning()) return;
+    if (IsRunning()) return;    
     WeaponComponent->StartFire();
 }
 

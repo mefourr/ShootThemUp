@@ -90,14 +90,12 @@ void ASTUBaseCharacter::OnHealthChanged(float Health, float HealthDelta) {}
 void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 {
     const auto FallVelocityZ = -GetVelocity().Z;
-    //  GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("On landed: %f"), FallVelocityZ), true,
-    //  FVector2D(2.0f, 2.0f));
 
     if (FallVelocityZ < LandedDamageVelocity.X) return;
 
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
 
-    TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+    TakeDamage(FinalDamage, FPointDamageEvent{}, nullptr, nullptr);
     HealthComponent->PlayCameraShake();
 }
 
@@ -107,4 +105,24 @@ void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
     if (!MaterialInst) return;
 
     MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
+void ASTUBaseCharacter::TurnOff()
+{
+    Off();
+
+    Super::TurnOff();
+}
+
+void ASTUBaseCharacter::Reset()
+{
+    Off();
+
+    Super::Reset();
+}
+
+void ASTUBaseCharacter::Off()
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
 }

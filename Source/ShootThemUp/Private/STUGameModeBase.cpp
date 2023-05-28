@@ -8,6 +8,7 @@
 #include "Player/STUPlayerState.h"
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
+#include "Components/STUWeaponComponent.h"
 #include "EngineUtils.h"
 #include "STUGameInstance.h"
 
@@ -207,11 +208,12 @@ void ASTUGameModeBase::GameOver()
     {
         if (Pawn)
         {
+
             Pawn->TurnOff();
             Pawn->DisableInput(nullptr);
-            // TODO: make stop fire;
         }
     }
+    StopAllFire();
     SetMatchState(ESTUMatchState::GameOver);
 }
 
@@ -227,6 +229,7 @@ bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDel
     const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
     if (PauseSet)
     {
+        StopAllFire();
         SetMatchState(ESTUMatchState::Pause);
     }
     return PauseSet;
@@ -240,4 +243,16 @@ bool ASTUGameModeBase::ClearPause()
         SetMatchState(ESTUMatchState::InProgress);
     }
     return PauseCleared;
+}
+
+void ASTUGameModeBase::StopAllFire()
+{
+    for (auto Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        const auto WeaponComponent = Pawn->FindComponentByClass<USTUWeaponComponent>();
+        if (!WeaponComponent) continue;
+
+        WeaponComponent->StopFire();
+        WeaponComponent->Zoom(false);
+    }
 }
