@@ -18,9 +18,10 @@ class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
 
 public:
     ASTURifleWeapon();
-   
+
     virtual void StartFire() override;
     virtual void StopFire() override;
+    virtual void Zoom(bool Enable) override;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
@@ -41,6 +42,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FX")
     FString TraceDataName = "TraceTarget";
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    float FOVZoomAngle = 50.0f;
+
     virtual void BeginPlay() override;
     virtual void MakeShot() override;
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
@@ -60,4 +64,5 @@ private:
     void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
     AController* GetController() const;
 
+    float DefaultCameraFOV = 90.0f;
 };

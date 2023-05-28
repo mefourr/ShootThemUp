@@ -46,6 +46,7 @@ protected:
     virtual void BeginPlay() override;
     virtual void OnDeath();
     virtual void OnHealthChanged(float Health, float HealthDelta);
+    virtual void Zoom(bool Enable){};
 
 public:
     virtual void Tick(float DeltaTime) override;

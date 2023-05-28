@@ -75,6 +75,7 @@ void ASTUBaseCharacter::OnDeath()
     SetLifeSpan(LifeSpanOnDeath);
 
     WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
 
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 

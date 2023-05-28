@@ -10,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTURifleWeapo, All, All);
+
 ASTURifleWeapon::ASTURifleWeapon()
 {
     WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
@@ -138,4 +140,18 @@ AController* ASTURifleWeapon::GetController() const
     const auto Pawn = Cast<APawn>(GetOwner());
 
     return Pawn ? Pawn->GetController() : nullptr;
+}
+
+void ASTURifleWeapon::Zoom(bool Enable)
+{
+    const auto Controller = Cast<APlayerController>(GetController());
+    if (!Controller || !Controller->PlayerCameraManager) return;
+
+    if (Enable)
+    {
+        DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
+    }
+
+    Controller->PlayerCameraManager->SetFOV(Enable ? FOVZoomAngle : DefaultCameraFOV);
+    // TODO: do smooth zoom;
 }

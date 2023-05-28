@@ -52,6 +52,6 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
 
     //  Sound
 
-
+    // TODO: do Impact sound for STUPlayer
     UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactData.ImapctSound, Hit.ImpactPoint);
 }

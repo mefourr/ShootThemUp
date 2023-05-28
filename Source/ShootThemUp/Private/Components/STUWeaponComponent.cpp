@@ -57,7 +57,7 @@ void USTUWeaponComponent::SpawnWeapons()
         if (!Weapon) continue;
 
         Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnClipEmpty);
-        
+
         Weapon->SetOwner(Character);
 
         Weapons.Add(Weapon);
@@ -88,6 +88,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 
     if (CurrentWeapon)
     {
+        CurrentWeapon->Zoom(false);
         CurrentWeapon->StopFire();
         AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
     }
@@ -252,7 +253,7 @@ bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
     return false;
 }
 
- bool USTUWeaponComponent::GetAmmoData(FAmmoData& AmmoData) const
+bool USTUWeaponComponent::GetAmmoData(FAmmoData& AmmoData) const
 {
     if (CurrentWeapon)
     {
@@ -284,4 +285,12 @@ bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType)
         }
     }
     return false;
+}
+
+void USTUWeaponComponent::Zoom(bool Enable)
+{
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->Zoom(Enable);
+    }
 }

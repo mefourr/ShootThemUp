@@ -35,6 +35,7 @@ public:
     FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
     bool IsAmmoFull() const;
+    virtual void Zoom(bool Enable){};
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
