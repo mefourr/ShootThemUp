@@ -50,8 +50,6 @@ void ASTUAiCharacter::UpdateHealthWidgetVisibility()
     const auto PlayerLocation = GetWorld()->GetFirstPlayerController()->GetPawnOrSpectator()->GetActorLocation();
     const auto Distance = FVector::Distance(PlayerLocation, GetActorLocation());
 
-    UE_LOG(LogSTUAiCharacter, Display, TEXT("%i"), Distance < HaelthVisibilityDistance);
-
     HealthWidgetComponent->SetVisibility(Distance < HaelthVisibilityDistance, true);
 }
 
