@@ -11,7 +11,6 @@
 #include "EngineUtils.h"
 #include "STUGameInstance.h"
 
-
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameMode, All, All);
 
 constexpr static int32 MinRoundTImeForRespawn = 10;
@@ -77,7 +76,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         {
             ++CurrentRound;
             ResetPlayers();
-           // UE_LOG(LogSTUGameMode, Warning, TEXT("========= NEW ROUND ========="));
+            // UE_LOG(LogSTUGameMode, Warning, TEXT("========= NEW ROUND ========="));
 
             StartRound();
         }
@@ -210,6 +209,7 @@ void ASTUGameModeBase::GameOver()
         {
             Pawn->TurnOff();
             Pawn->DisableInput(nullptr);
+            // TODO: make stop fire;
         }
     }
     SetMatchState(ESTUMatchState::GameOver);
