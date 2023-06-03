@@ -95,7 +95,8 @@ void ASTUProjectile::DestroyRocket()
     Sphere->DestroyComponent();
     PointLightComponent->DestroyComponent();
     CollisionComponent->DestroyComponent();
-    AudioComponent->DestroyComponent(); // TODO: redo disappear smoke;
+    AudioComponent->DestroyComponent(); 
 
+    // TODO: redo disappear smoke;
     NiagaraComponent->GetSystemInstance()->Deactivate(false);
 }
